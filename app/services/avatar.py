@@ -1,0 +1,20 @@
+import os
+import cloudinary
+import cloudinary.uploader
+from dotenv import load_dotenv
+
+load_dotenv()
+
+cloudinary.config(
+    cloud_name=os.getenv("CLD_NAME"),
+    api_key=os.getenv("CLD_API_KEY"),
+    api_secret=os.getenv("CLD_API_SECRET"),
+    secure=True
+)
+
+def upload_avatar(file, public_id: str) -> str:
+    r = cloudinary.uploader.upload(file.file, public_id=public_id, overwrite=True)
+    url = cloudinary.CloudinaryImage(public_id).build_url(
+        width=250, height=250, crop='fill', version=r.get('version')
+    )
+    return url
